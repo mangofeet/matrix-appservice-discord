@@ -631,12 +631,15 @@ export class DiscordBot {
             this.channelLock.set(chan.id);
             if (!roomLookup.canSendEmbeds) {
                 // NOTE: Don't send replies to discord if we are a puppet user.
+                log.verbose("prepareEmbedSetUserAccount")
                 msg = await chan.send(this.prepareEmbedSetUserAccount(embedSet), opts);
             } else if (!botUser) {
+                log.verbose("prepareEmbedSetBotAccount")
                 opts.embed = this.prepareEmbedSetBotAccount(embedSet);
                 msg = await chan.send(embed.description, opts);
             } else if (hook) {
                 MetricPeg.get.remoteCall("hook.send");
+                log.verbose("prepareEmbedSetBotWebhook")
                 const embeds = this.prepareEmbedSetWebhook(embedSet);
                 msg = await hook.send(embed.description, {
                     avatarURL: embed!.author!.iconURL,
